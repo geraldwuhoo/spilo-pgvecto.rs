@@ -150,6 +150,13 @@ for version in $DEB_PG_SUPPORTED_VERSIONS; do
         done
     )
 
+    if [ "${version%.*}" -ge 14 ]; then
+        PG_VERSION="${version%.*}"
+        curl -sL "https://github.com/tensorchord/pgvecto.rs/releases/download/v${PGVECTORS}/vectors-pg${PG_VERSION}_${PGVECTORS}_amd64.deb" -o "vectors-pg${PG_VERSION}_${PGVECTORS}_amd64.deb"
+        apt-get install "./vectors-pg${PG_VERSION}_${PGVECTORS}_amd64.deb"
+        rm -v "./vectors-pg${PG_VERSION}_${PGVECTORS}_amd64.deb"
+    fi
+
     if [ "${TIMESCALEDB_APACHE_ONLY}" != "true" ] && [ "${TIMESCALEDB_TOOLKIT}" = "true" ]; then
         __versionCodename=$(sed </etc/os-release -ne 's/^VERSION_CODENAME=//p')
         echo "deb [signed-by=/usr/share/keyrings/timescale_E7391C94080429FF.gpg] https://packagecloud.io/timescale/timescaledb/ubuntu/ ${__versionCodename} main" | tee /etc/apt/sources.list.d/timescaledb.list
